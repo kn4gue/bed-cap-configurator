@@ -27,22 +27,14 @@ except ImportError:
         VehicleSelection,
     )
 
-DEFAULT_CATALOG_PATH = Path(__file__).resolve().parent / "data" / "master_catalog.json"
-MASTER_DATA_PATH = Path(os.environ.get("CONFIGURATOR_MASTER_DATA", str(DEFAULT_CATALOG_PATH)))
-if not MASTER_DATA_PATH.exists() and Path("/home/twis7/homunculus-server/data/lta/lta_configurator_master_data.json").exists():
-    MASTER_DATA_PATH = Path("/home/twis7/homunculus-server/data/lta/lta_configurator_master_data.json")
+try:
+    from .catalog_manager import load_catalog
+except ImportError:
+    from catalog_manager import load_catalog
 
-_CACHED_MASTER_DATA = None
 
-def get_master_data() -> dict:
-    global _CACHED_MASTER_DATA
-    if _CACHED_MASTER_DATA is None:
-        if os.path.exists(MASTER_DATA_PATH):
-            with open(MASTER_DATA_PATH, "r", encoding="utf-8") as f:
-                _CACHED_MASTER_DATA = json.load(f)
-        else:
-            _CACHED_MASTER_DATA = {}
-    return _CACHED_MASTER_DATA
+def get_master_data(force_reload: bool = False) -> dict:
+    return load_catalog(force_reload=force_reload)
 
 
 def get_model_by_id(model_id: str) -> dict | None:

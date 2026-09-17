@@ -12,6 +12,18 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 try:
+    from .catalog_manager import (
+        calc_margin_from_markup,
+        calc_markup_from_margin,
+        calc_retail_from_margin,
+        calc_retail_from_markup,
+        get_model_history,
+        load_catalog,
+        load_history,
+        recompute_model_pricing,
+        restore_version,
+        save_catalog_with_history,
+    )
     from .quote_service import (
         get_quote_by_ref,
         save_employee_quote,
@@ -24,15 +36,31 @@ try:
         validate_and_price_configuration,
     )
     from .schemas import (
+        AdminCatalogUpdatePayload,
+        AdminModelPayload,
+        AdminSettingsPayload,
         ConfiguratorValidationRequest,
         ConfiguratorValidationResponse,
         EmployeeQuoteSubmissionRequest,
+        HistoryRestoreRequest,
         QuoteSubmissionRequest,
         QuoteSubmissionResponse,
         QuoteUpdateRequest,
     )
     from .vin_validator import infer_vehicle_from_vin, validate_vin
 except ImportError:
+    from catalog_manager import (
+        calc_margin_from_markup,
+        calc_markup_from_margin,
+        calc_retail_from_margin,
+        calc_retail_from_markup,
+        get_model_history,
+        load_catalog,
+        load_history,
+        recompute_model_pricing,
+        restore_version,
+        save_catalog_with_history,
+    )
     from quote_service import (
         get_quote_by_ref,
         save_employee_quote,
@@ -45,9 +73,13 @@ except ImportError:
         validate_and_price_configuration,
     )
     from schemas import (
+        AdminCatalogUpdatePayload,
+        AdminModelPayload,
+        AdminSettingsPayload,
         ConfiguratorValidationRequest,
         ConfiguratorValidationResponse,
         EmployeeQuoteSubmissionRequest,
+        HistoryRestoreRequest,
         QuoteSubmissionRequest,
         QuoteSubmissionResponse,
         QuoteUpdateRequest,
@@ -263,6 +295,158 @@ async def update_quote_endpoint(quote_ref: str, req: QuoteUpdateRequest):
     return updated
 
 
+# =====================================================================
+# ADMIN & CATALOG MANAGEMENT API ENDPOINTS
+# =====================================================================
+
+@router.get("/admin/catalog")
+async def get_admin_catalog():
+    """Returns the full master catalog with editable models, options, and metadata."""
+    return load_catalog(force_reload=True)
+
+
+@router.put("/admin/catalog")
+async def update_admin_catalog(payload: AdminCatalogUpdatePayload):
+    """Saves the full catalog, recalculates pricing formulas, and writes an immutable historical snapshot."""
+    cat = load_catalog(force_reload=True)
+    if payload.metadata:
+        cat["metadata"].update(payload.metadata)
+    if payload.pricing_rules:
+        cat["pricing_rules"].update(payload.pricing_rules)
+    if payload.options_catalog:
+        cat["options_catalog"] = payload.options_catalog
+
+    cat["models"] = [m.model_dump() for m in payload.models]
+
+    author = payload.author or "Admin"
+    summary = payload.change_summary or "Full catalog updated via Admin portal"
+    saved_cat, version_id = save_catalog_with_history(cat, author=author, change_summary=summary)
+    return {
+        "success": True,
+        "version_id": version_id,
+        "models_count": len(saved_cat.get("models", [])),
+        "message": "Catalog saved and version snapshot recorded successfully."
+    }
+
+
+@router.post("/admin/models")
+async def create_or_update_model(payload: AdminModelPayload):
+    """Adds a new truck cap/cover model or updates an existing one."""
+    cat = load_catalog(force_reload=True)
+    models = cat.get("models", [])
+    existing_idx = None
+    for i, m in enumerate(models):
+        if m["id"] == payload.id:
+            existing_idx = i
+            break
+
+    model_dict = payload.model_dump()
+    default_markup = float(cat.get("metadata", {}).get("default_markup_pct", 40.0))
+    model_synced = recompute_model_pricing(model_dict, default_markup=default_markup)
+
+    action = "Updated" if existing_idx is not None else "Added new"
+    if existing_idx is not None:
+        models[existing_idx] = model_synced
+    else:
+        models.append(model_synced)
+
+    cat["models"] = models
+    summary = f"{action} cover model: {payload.name} ({payload.id})"
+    saved_cat, version_id = save_catalog_with_history(cat, author="Admin", change_summary=summary)
+    return {
+        "success": True,
+        "version_id": version_id,
+        "model": model_synced,
+        "message": f"Cover model '{payload.name}' {action.lower()} successfully."
+    }
+
+
+@router.delete("/admin/models/{model_id}")
+async def delete_or_archive_model(model_id: str, permanent: bool = Query(False, description="Permanent deletion vs soft archive")):
+    """Removes or archives an existing truck cap cover model."""
+    cat = load_catalog(force_reload=True)
+    models = cat.get("models", [])
+    target = None
+
+    if permanent:
+        new_models = []
+        for m in models:
+            if m["id"] == model_id:
+                target = m
+            else:
+                new_models.append(m)
+        if not target:
+            raise HTTPException(status_code=404, detail=f"Model '{model_id}' not found")
+        cat["models"] = new_models
+        summary = f"Permanently deleted cover model: {target.get('name', model_id)} ({model_id})"
+    else:
+        for m in models:
+            if m["id"] == model_id:
+                m["is_active"] = False
+                target = m
+                break
+        if not target:
+            raise HTTPException(status_code=404, detail=f"Model '{model_id}' not found")
+        cat["models"] = models
+        summary = f"Archived cover model: {target.get('name', model_id)} ({model_id})"
+
+    saved_cat, version_id = save_catalog_with_history(cat, author="Admin", change_summary=summary)
+    return {
+        "success": True,
+        "version_id": version_id,
+        "message": summary
+    }
+
+
+@router.get("/admin/history")
+async def get_admin_history():
+    """Returns the immutable audit log of all catalog versions and snapshots."""
+    history = load_history()
+    return history
+
+
+@router.post("/admin/history/restore")
+async def restore_admin_version(req: HistoryRestoreRequest):
+    """Restores a previous catalog version snapshot from history."""
+    restored = restore_version(req.version_id, author=req.author or "Admin")
+    if not restored:
+        raise HTTPException(status_code=404, detail=f"Version '{req.version_id}' not found in history")
+    return {
+        "success": True,
+        "version_id": req.version_id,
+        "message": f"Successfully restored catalog to version {req.version_id}."
+    }
+
+
+@router.get("/admin/models/{model_id}/history")
+async def get_model_history_endpoint(model_id: str):
+    """Traces all historical pricing and configuration changes for a specific model."""
+    timeline = get_model_history(model_id)
+    return timeline
+
+
+@router.post("/admin/settings")
+async def update_admin_settings(settings: AdminSettingsPayload):
+    """Updates global organization and default pricing variables."""
+    cat = load_catalog(force_reload=True)
+    cat["metadata"]["company_name"] = settings.company_name
+    cat["metadata"]["default_brand"] = settings.default_brand
+    cat["metadata"]["default_markup_pct"] = settings.default_markup_pct
+    cat["metadata"]["tax_rate"] = settings.tax_rate
+    cat["metadata"]["currency"] = settings.currency
+    cat["pricing_rules"]["labor_rates"] = settings.labor_rates
+    cat["pricing_rules"]["default_markup_pct"] = settings.default_markup_pct
+
+    summary = f"Updated organization settings: {settings.company_name} (Default Brand: {settings.default_brand}, Default Markup: {settings.default_markup_pct}%)"
+    saved_cat, version_id = save_catalog_with_history(cat, author="Admin", change_summary=summary)
+    return {
+        "success": True,
+        "version_id": version_id,
+        "settings": settings,
+        "message": "Organization settings updated successfully."
+    }
+
+
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Bed Cap Configurator & Pricing Engine",
@@ -292,7 +476,16 @@ def create_app() -> FastAPI:
                 return FileResponse(index_path)
             return {"status": "ok", "docs": "/docs", "api": "/api/configurator/health"}
 
+        @app.get("/admin")
+        @app.get("/admin/configurator")
+        async def serve_admin_portal():
+            admin_path = static_dir / "admin.html"
+            if admin_path.exists():
+                return FileResponse(admin_path)
+            return {"status": "error", "message": "Admin portal UI not found"}
+
     return app
 
 
 app = create_app()
+

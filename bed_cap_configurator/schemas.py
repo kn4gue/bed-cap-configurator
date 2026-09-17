@@ -147,3 +147,54 @@ class QuoteUpdateRequest(BaseModel):
     status: Optional[str] = None
     internal_notes: Optional[str] = None
     sales_rep: Optional[str] = None
+
+
+# =====================================================================
+# ADMIN & CATALOG MANAGEMENT SCHEMAS
+# =====================================================================
+
+class AdminModelPayload(BaseModel):
+    id: str = Field(..., description="Unique model identifier slug, e.g. venturous_alpine")
+    name: str = Field(..., description="Model display name")
+    brand: str = Field(default="Venturous", description="Brand name (Venturous, Ranch, Unicover, Swiss, Custom)")
+    style: str = Field(default="cab_high", description="Style profile: cab_high, mid_rise, high_rise, commercial_aluminum, tonneau_lid")
+    category: str = Field(default="fiberglass", description="fiberglass, aluminum, steel, composite")
+    cost: float = Field(default=0.0, ge=0.0, description="Base manufacturing/wholesale cost")
+    markup_pct: float = Field(default=40.0, description="Markup percentage over cost")
+    margin_pct: Optional[float] = Field(default=None, description="Gross margin percentage of retail")
+    base_retail_price: float = Field(default=0.0, ge=0.0, description="Customer MSRP retail price")
+    manual_price_override: bool = Field(default=False, description="Whether retail price was manually overridden")
+    is_active: bool = Field(default=True, description="Whether model is active or archived")
+    tagline: Optional[str] = Field(default="", description="Marketing tagline")
+    description: Optional[str] = Field(default="", description="Product description")
+    warranty: Optional[str] = Field(default="Lifetime Structural & Paint Warranty", description="Warranty terms")
+    standard_features: List[str] = Field(default_factory=list, description="Standard included features")
+    compatible_options: List[str] = Field(default_factory=list, description="Compatible option item IDs")
+
+
+class AdminSettingsPayload(BaseModel):
+    company_name: str = Field(default="Truck Guy Upfitters", description="Operating company name")
+    default_brand: str = Field(default="Venturous", description="Default brand selection")
+    default_markup_pct: float = Field(default=40.0, ge=0.0, description="Default markup % across covers")
+    tax_rate: float = Field(default=0.06, ge=0.0, le=1.0, description="Sales tax rate")
+    currency: str = Field(default="USD", description="Currency code")
+    labor_rates: Dict[str, float] = Field(default_factory=lambda: {
+        "base_installation": 200.0,
+        "keyless_wiring": 120.0,
+        "rack_installation": 95.0
+    })
+
+
+class AdminCatalogUpdatePayload(BaseModel):
+    metadata: Optional[Dict[str, Any]] = None
+    pricing_rules: Optional[Dict[str, Any]] = None
+    models: List[AdminModelPayload]
+    options_catalog: Optional[Dict[str, Any]] = None
+    author: Optional[str] = "Admin"
+    change_summary: Optional[str] = "Catalog updated via Admin portal"
+
+
+class HistoryRestoreRequest(BaseModel):
+    version_id: str
+    author: Optional[str] = "Admin"
+
