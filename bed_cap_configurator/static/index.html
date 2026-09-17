@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Truck Guy Upfitters — Custom LTA Truck Cap Configurator v.02142a</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Russo+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="configurator.css?v=20260901_1217" />
+</head>
+<body>
+  <!-- Top Navigation Header -->
+  <header class="tgu-header">
+    <div class="tgu-header-inner">
+      <div class="tgu-brand">
+        <div class="tgu-logo-badge">TRUCK GUY</div>
+        <div class="tgu-brand-text">
+          <span class="tgu-title">UPFITTERS</span>
+          <span class="tgu-subtitle">Seneca, SC • Authorized LTA / Ranch / Venturous Dealer • <span style="color:#00E5FF; font-weight:700; font-size:0.75rem;">v.02142a</span></span>
+        </div>
+      </div>
+      <div class="tgu-header-right">
+        <a href="tel:18647987825" class="tgu-phone-badge" title="Call Truck Guy Upfitters">
+          <svg class="phone-gold-svg" viewBox="0 0 24 24" width="20" height="20">
+            <defs>
+              <linearGradient id="goldPhoneGradHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFFBE0"/>
+                <stop offset="35%" stop-color="#FFD700"/>
+                <stop offset="100%" stop-color="#FF8C00"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#goldPhoneGradHeader)" d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+          </svg>
+          <span class="phone-text">864.79.TRUCK</span>
+        </a>
+        <div class="tgu-badge-authorized">OFFICIAL LTA DEALER</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Configurator Wrapper -->
+  <main class="configurator-container">
+    
+    <!-- Step Navigation Bar -->
+    <nav class="step-nav" id="stepNav">
+      <button class="step-btn active" data-step="1">
+        <span class="step-num">1</span>
+        <span class="step-label">Vehicle Fitment</span>
+      </button>
+      <button class="step-btn" data-step="2">
+        <span class="step-num">2</span>
+        <span class="step-label">Cap Model</span>
+      </button>
+      <button class="step-btn" data-step="3">
+        <span class="step-num">3</span>
+        <span class="step-label">Windows & Access</span>
+      </button>
+      <button class="step-btn" data-step="4">
+        <span class="step-num">4</span>
+        <span class="step-label">Racks & Interior</span>
+      </button>
+      <button class="step-btn" data-step="5">
+        <span class="step-num">5</span>
+        <span class="step-label">Review & Quote</span>
+      </button>
+    </nav>
+
+    <!-- Alert / Resolution Banner -->
+    <div id="ruleAlertBanner" class="rule-alert-banner hidden"></div>
+
+    <!-- 2-Column App Grid -->
+    <div class="app-layout">
+      
+      <!-- Left: Interactive Funnel Steps -->
+      <section class="step-content-area" id="stepContentArea">
+        
+        <!-- STEP 1: Vehicle Matchmaker -->
+        <div class="step-pane active" id="stepPane1">
+          <div class="pane-header">
+            <h2>Step 1: Select Your Truck Platform</h2>
+            <p>Every LTA truck cap is precision-molded to exact factory truck bed dimensions. Select your specs below to lock 100% fitment.</p>
+          </div>
+
+          <div class="form-grid">
+            <!-- 1. Mandatory VIN Entry (Spot #1 - Auto-populates vehicle specs) -->
+            <div class="form-group full-width" id="vinFormGroup">
+              <label for="vehVin">1. Vehicle Identification Number (VIN) <span class="req-badge" id="req-vehVin">* REQUIRED</span></label>
+              <div class="vin-input-wrapper">
+                <input type="text" id="vehVin" class="tgu-input vin-input" maxlength="17" required placeholder="Enter 17-digit VIN (e.g. 1FTFW1ED2NFB12345)" />
+                <button type="button" class="btn-vin-decode" id="btnVinDecode">🔍 Auto-Match Specs</button>
+              </div>
+              <small class="vin-helper-text" id="vinHelperText">💡 Enter your 17-digit VIN to automatically match your truck's make, model, year, and compatible bed lengths.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="vehMake">2. Truck Manufacturer <span class="req-badge" id="req-vehMake">* REQUIRED</span></label>
+              <select id="vehMake" class="tgu-select">
+                <option value="">-- Choose Make (Required) --</option>
+                <option value="Ford">Ford</option>
+                <option value="Chevrolet">Chevrolet</option>
+                <option value="GMC">GMC</option>
+                <option value="Ram">Ram / Dodge</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Jeep">Jeep</option>
+                <option value="Nissan">Nissan</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="vehModel">3. Model <span class="req-badge" id="req-vehModel">* REQUIRED</span></label>
+              <select id="vehModel" class="tgu-select">
+                <option value="">-- Choose Model (Required) --</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="vehYear">4. Model Year <span class="req-badge" id="req-vehYear">* REQUIRED</span></label>
+              <select id="vehYear" class="tgu-select">
+                <option value="">-- Choose Year (Required) --</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label>5. Bed Length & Cab Configuration <span class="req-badge" id="req-vehBed">* REQUIRED</span></label>
+              <div class="bed-tiles-grid" id="bedTilesGrid">
+                <!-- Interactive bed size cards rendered via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 1 Validation Error Box -->
+          <div class="step-error-box hidden" id="step1ErrorBox"></div>
+
+          <!-- Color Swatch Selector -->
+          <div class="paint-swatch-section">
+            <h3>6. Factory OEM Paint Color & Custom Code <span class="req-badge" id="req-paintColor">* REQUIRED</span></h3>
+            <p>Select your truck's paint match, choose textured matte black, or enter a custom OEM paint code.</p>
+            <div class="color-swatches-grid" id="colorSwatches">
+              <!-- Rendered dynamically based on Year, Make & Model -->
+            </div>
+
+            <!-- Custom Paint Code Input Box -->
+            <div class="custom-paint-container hidden" id="customPaintBox">
+              <div class="custom-paint-card">
+                <div class="custom-paint-header">
+                  <h4>🎨 Enter Custom OEM Paint Code & Color</h4>
+                  <span class="placard-tip">Door Jamb Sticker Guide</span>
+                </div>
+                <p>We provide exact computer paint matching for any automotive paint code. Enter your code and color name below:</p>
+                <div class="form-grid" style="margin-bottom: 10px;">
+                  <div class="form-group">
+                    <label for="customPaintCode">OEM Paint Code *</label>
+                    <input type="text" id="customPaintCode" class="tgu-input" placeholder="e.g. PX8, WA8555, 040, G1E, PR4, 1J9" />
+                  </div>
+                  <div class="form-group">
+                    <label for="customPaintName">Color Description / Name</label>
+                    <input type="text" id="customPaintName" class="tgu-input" placeholder="e.g. Hydro Blue, Summit White, Celestial Silver" />
+                  </div>
+                </div>
+                <div class="door-jamb-guide">
+                  💡 <b>Where to find your paint code:</b> Check the safety sticker inside the driver's door jamb. Look for <code>EXT PNT:</code> (Ford), <code>BC/CC</code> (GM/Chevy), <code>PNT:</code> (Ram), or <code>C/TR:</code> (Toyota).
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="pane-footer">
+            <button class="tgu-primary-btn next-step-btn" data-target="2">Continue to Cap Selection →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Model & Style Selection -->
+        <div class="step-pane" id="stepPane2">
+          <div class="pane-header">
+            <h2>Step 2: Choose Your LTA Cap Style <span class="req-badge" id="req-capModel">* REQUIRED</span></h2>
+            <p>Compare premium fiberglass, mid-rise wedge, and heavy-duty commercial lines. Click <b>"What You Get"</b> on any model for specs and photos.</p>
+          </div>
+
+          <div class="step-error-box hidden" id="step2ErrorBox"></div>
+
+          <!-- Category Filter Tabs -->
+          <div class="model-category-tabs" id="modelCategoryTabs">
+            <button type="button" class="cat-tab-btn active" data-cat="all">All Models</button>
+            <button type="button" class="cat-tab-btn" data-cat="fiberglass">Fiberglass Caps</button>
+            <button type="button" class="cat-tab-btn" data-cat="aluminum">Commercial Aluminum Tops</button>
+            <button type="button" class="cat-tab-btn" data-cat="lid">Fiberglass Tonneau Bed Lids</button>
+          </div>
+
+          <div class="models-grid" id="modelsGrid">
+            <!-- Dynamic model cards rendered via JS -->
+          </div>
+
+          <div class="pane-footer flex-between">
+            <button class="tgu-secondary-btn prev-step-btn" data-target="1">← Back to Vehicle</button>
+            <button class="tgu-primary-btn next-step-btn" data-target="3">Continue to Windows & Doors →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Windows & Access Doors -->
+        <div class="step-pane" id="stepPane3">
+          <div class="pane-header">
+            <h2>Step 3: Access Windows & Specifications</h2>
+            <p>Customize access doors, height profiles, and factory layout for your specific workflow or build.</p>
+          </div>
+
+          <div class="step-error-box hidden" id="step3ErrorBox"></div>
+
+          <!-- FIBERGLASS ACCESS CONFIGURATION -->
+          <div id="fiberglassConfigContainer">
+            <!-- Front Window (First Section) -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Front Window (Cab Facing) <span class="req-badge" id="req-frontWindow">* REQUIRED</span></h3>
+                <span class="category-badge">CAB PASS-THROUGH</span>
+              </div>
+              <div class="option-tiles-grid" id="frontWindowGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Driver Side Access -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Driver-Side Access (Left) <span class="req-badge" id="req-driverSide">* REQUIRED</span></h3>
+                <span class="category-badge">SIDE ACCESS</span>
+              </div>
+              <div class="option-tiles-grid" id="driverSideGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Passenger Side Access -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Passenger-Side Access (Right) <span class="req-badge" id="req-passengerSide">* REQUIRED</span></h3>
+                <span class="category-badge">SIDE ACCESS</span>
+              </div>
+              <div class="option-tiles-grid" id="passengerSideGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Rear Door -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Rear Door & Locking Mechanism <span class="req-badge" id="req-rearDoor">* REQUIRED</span></h3>
+                <span class="category-badge">REAR ACCESS</span>
+              </div>
+              <div class="option-tiles-grid" id="rearDoorGrid">
+                <!-- Rendered via JS -->
+              </div>
+              <div id="rearDoorInlineUpgradeContainer" class="inline-upgrade-container hidden"></div>
+
+              <!-- Keyless Remote Toggle -->
+              <div class="extra-toggle-box">
+                <label class="toggle-control">
+                  <input type="checkbox" id="chkKeylessRemote" />
+                  <span class="toggle-slider"></span>
+                  <span class="toggle-text">
+                    <b>Sync Lock with Truck Key Fob (OEM Remote Keyless Entry)</b>
+                    <small>+$245.00 • Automatically locks and unlocks your cap rear door when you lock your truck. <em>(Increases shop install labor by $120 for 12V key fob actuator harness wiring)</em></small>
+                  </span>
+                </label>
+              </div>
+              <div id="keylessInlineUpgradeContainer" class="inline-upgrade-container hidden"></div>
+            </div>
+          </div>
+
+          <!-- ALUMINUM TOPS CONFIGURATION (Shown dynamically for Unicover & Swiss) -->
+          <div id="aluminumConfigContainer" class="hidden">
+            <!-- Aluminum Height Profile -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Aluminum Height & Roof Profile <span class="req-badge" id="req-aluminumHeight">* REQUIRED</span></h3>
+                <span class="category-badge">HEIGHT PROFILE</span>
+              </div>
+              <div class="option-tiles-grid" id="aluminumHeightGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Aluminum Side Window & Utility Door Layout -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Side Window & Utility Door Layout (#100 – #1200) <span class="req-badge" id="req-aluminumSideLayout">* REQUIRED</span></h3>
+                <span class="category-badge">SIDE ACCESS CONFIGURATION</span>
+              </div>
+              <div class="option-tiles-grid" id="aluminumSideGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Aluminum Color / Finish -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Aluminum Exterior Finish & Color <span class="req-badge" id="req-aluminumColor">* REQUIRED</span></h3>
+                <span class="category-badge">EXTERIOR SKIN</span>
+              </div>
+              <div class="option-tiles-grid" id="aluminumColorGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TONNEAU LID CONFIGURATION (Shown dynamically for Ranch Fusion & Unicover Aurora Lids) -->
+          <div id="tonneauConfigContainer" class="hidden">
+            <!-- Tonneau Locking System -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Locking & Security Mechanism <span class="req-badge" id="req-tonneauLocking">* REQUIRED</span></h3>
+                <span class="category-badge">SECURITY & ACCESS</span>
+              </div>
+              <div class="option-tiles-grid" id="tonneauLockingGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Tonneau Interior Lighting -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Under-Cover Lighting System <span class="req-badge" id="req-tonneauLighting">* REQUIRED</span></h3>
+                <span class="category-badge">UNDER-COVER LIGHTING</span>
+              </div>
+              <div class="option-tiles-grid" id="tonneauLightingGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="pane-footer flex-between">
+            <button class="tgu-secondary-btn prev-step-btn" data-target="2">← Back to Models</button>
+            <button class="tgu-primary-btn next-step-btn" id="step3NextBtn" data-target="4">Continue to Racks & Interior →</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Structure, Racks, Lighting, Interior Gear & Storage -->
+        <div class="step-pane" id="stepPane4">
+          <div class="pane-header">
+            <h2 id="step4Title">Step 4: Roof Structure, Racks, Lighting & Interior Accessories</h2>
+            <p id="step4Desc">Select your roof reinforcement structure, roof rack system, official 8-tier lighting package, interior gear accessories, and Cap-Pack drawer system.</p>
+          </div>
+
+          <div class="step-error-box hidden" id="step4ErrorBox"></div>
+
+          <!-- TONNEAU ACCESSORIES CONTAINER (Shown dynamically for Tonneau Lids) -->
+          <div id="tonneauAccessoriesContainer" class="hidden">
+            <!-- Tonneau Racks -->
+            <div class="option-section">
+              <div class="section-title-row">
+                <h3>Over-Lid Crossbar Rack Systems <span class="req-badge" id="req-tonneauRack">* REQUIRED</span></h3>
+                <span class="category-badge">OVERHEAD CARGO</span>
+              </div>
+              <div class="option-tiles-grid" id="tonneauRackGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Roof Reinforcement Structure -->
+          <div class="option-section" id="sectionRoofReinforce">
+            <div class="section-title-row">
+              <h3>Roof Structure & Reinforcement <span class="req-badge" id="req-roofReinforce">* REQUIRED</span></h3>
+              <span class="category-badge">STRUCTURAL LOAD</span>
+            </div>
+            <div class="option-tiles-grid" id="roofReinforceGrid">
+              <!-- Rendered via JS -->
+            </div>
+            <div id="roofReinforceInlineUpgradeContainer" class="inline-upgrade-container hidden"></div>
+          </div>
+
+          <!-- Roof Racks -->
+          <div class="option-section" id="sectionRoofRacks">
+            <div class="section-title-row">
+              <h3>Roof Rack Systems <span class="req-badge" id="req-roofRack">* REQUIRED</span></h3>
+              <span class="category-badge">OVERHEAD CARGO</span>
+            </div>
+            <div class="option-tiles-grid" id="roofRackGrid">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Official 8-Tier Lighting Packages -->
+          <div class="option-section" id="sectionLighting">
+            <div class="section-title-row">
+              <h3>Official Interior Lighting Packages <span class="req-badge" id="req-lighting">* REQUIRED</span></h3>
+              <span class="category-badge">8 FACTORY PACKAGES</span>
+            </div>
+            <div class="option-tiles-grid" id="lightingGrid">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Interior Gear, Comfort & Power -->
+          <div class="option-section" id="sectionInteriorGear">
+            <div class="section-title-row">
+              <h3>Interior Comfort, Power & Gear Upgrades</h3>
+              <span class="category-badge">CABIN AMENITIES</span>
+            </div>
+
+            <div class="extra-toggle-box is-included">
+              <label class="toggle-control">
+                <input type="checkbox" id="chkHeadliner" checked />
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">
+                  <span id="headlinerTitleWrap"><b>Full Charcoal Carpet Interior Headliner</b></span>
+                  <span id="headlinerDescWrap"><small>+$175.00 • Eliminates overnight condensation dripping & dampens road noise.</small></span>
+                </span>
+              </label>
+            </div>
+            <div id="headlinerInlineUpgradeContainer" class="inline-upgrade-container hidden"></div>
+
+            <div class="extra-toggle-box">
+              <label class="toggle-control">
+                <input type="checkbox" id="chkCargoNet" />
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">
+                  <b>Ceiling Storage Cargo Net</b>
+                  <small>+$45.00 • Overhead elastic nylon mesh net for holding coats, sleeping bags, and soft gear.</small>
+                </span>
+              </label>
+            </div>
+
+            <div class="extra-toggle-box">
+              <label class="toggle-control">
+                <input type="checkbox" id="chkUsbFuseBox" />
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">
+                  <b>Quick Disconnect Fuse Box w/ Dual USB Charging Port</b>
+                  <small>+$95.00 • Weatherproof 12V power distribution block with dual high-speed USB charging ports.</small>
+                </span>
+              </label>
+            </div>
+
+            <div class="extra-toggle-box">
+              <label class="toggle-control">
+                <input type="checkbox" id="chkClothesHanger" />
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">
+                  <b>Folding Ceiling Clothes Hanger Hooks (Pair)</b>
+                  <small>+$35.00 • Dual heavy-duty folding ceiling hooks for hanging suits, waders, and rain gear.</small>
+                </span>
+              </label>
+            </div>
+
+            <div class="extra-toggle-box">
+              <label class="toggle-control">
+                <input type="checkbox" id="chkRodHolder" />
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">
+                  <b>Overhead Dual Fishing Rod Holder Rack</b>
+                  <small>+$75.00 • Secure overhead padded clamp system for carrying 2 full-length fishing rods safely.</small>
+                </span>
+              </label>
+            </div>
+
+            <div class="extra-toggle-box">
+              <label class="toggle-control">
+                <input type="checkbox" id="chkHdChopRoof" />
+                <span class="toggle-slider"></span>
+                <span class="toggle-text">
+                  <b>HD Thick Chop Structural Roof Reinforcement</b>
+                  <small>+$195.00 • High-density fiberglass chop layer for extreme load-bearing strength.</small>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Cap-Pack Ceiling Pull-Out Drawer Systems -->
+          <div class="option-section" id="sectionCapPack">
+            <div class="section-title-row">
+              <h3>Cap-Pack Ceiling Slide-Out Storage System <span class="req-badge" id="req-capPack">* REQUIRED</span></h3>
+              <span class="category-badge">CEILING STORAGE</span>
+            </div>
+            <div class="option-tiles-grid" id="capPackGrid">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Side Tool Boxes & Shelving (Driver & Passenger) -->
+          <div class="option-section" id="sectionSideToolbox">
+            <div class="section-title-row">
+              <h3>Side Tool Boxes & Shelving Storage</h3>
+              <span class="category-badge">BED STORAGE</span>
+            </div>
+            <p class="section-desc" id="toolboxReinforceNotice" style="margin-bottom: 1rem; font-size: 0.9rem; color: #4b5563;">
+              ℹ️ <b>Shell Reinforcement:</b> Fiberglass caps automatically include mandatory heavy-duty shell reinforcement (+$50.00 per side). Commercial Aluminum HD &amp; WorkForce shells are exempt ($0.00).
+            </p>
+
+            <!-- Driver Side Toolbox -->
+            <div style="margin-bottom: 1.5rem;">
+              <div class="section-title-row" style="margin-bottom: 0.5rem;">
+                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 700;">Toolbox - Driver Side (DS) <span class="req-badge" id="req-driverToolbox">* REQUIRED</span></h4>
+              </div>
+              <div class="option-tiles-grid" id="driverToolboxGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <!-- Passenger Side Toolbox -->
+            <div style="margin-bottom: 1rem;">
+              <div class="section-title-row" style="margin-bottom: 0.5rem;">
+                <h4 style="margin: 0; font-size: 1.05rem; font-weight: 700;">Toolbox - Passenger Side (PS) <span class="req-badge" id="req-passengerToolbox">* REQUIRED</span></h4>
+              </div>
+              <div class="option-tiles-grid" id="passengerToolboxGrid">
+                <!-- Rendered via JS -->
+              </div>
+            </div>
+
+            <div id="toolboxInlineUpgradeContainer" class="inline-upgrade-container hidden"></div>
+          </div>
+
+          <!-- Decals & Wrap Rail Trim (Hidden for Customers, Visible for Employees) -->
+          <div class="option-section hidden" id="sectionDecalsTrim">
+            <div class="section-title-row">
+              <h3>Branding Decals & Wrap Rail Customization</h3>
+              <span class="category-badge">TRIM & STYLING</span>
+            </div>
+
+            <div class="option-tiles-grid" id="decalGrid">
+              <!-- Rendered via JS -->
+            </div>
+
+            <div class="option-tiles-grid" id="wrapRailGrid" style="margin-top: 1rem;">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <div class="pane-footer flex-between">
+            <button class="tgu-secondary-btn prev-step-btn" id="step4PrevBtn" data-target="3">← Back to Windows</button>
+            <button class="tgu-primary-btn next-step-btn" data-target="5">Review Build & Quote →</button>
+          </div>
+        </div>
+
+        <!-- STEP 5: Review & Quote Lead Submission -->
+        <div class="step-pane" id="stepPane5">
+          <div class="pane-header">
+            <h2>Step 5: Review Your Custom Build & Request Official Quote</h2>
+            <p>Review your itemized specifications. Your custom cap includes certified professional installation at our Seneca, SC facility.</p>
+          </div>
+
+          <div class="step-error-box hidden" id="step5ErrorBox"></div>
+
+          <!-- Installation Selection (Mandatory Shop Installation) -->
+          <div class="install-choice-box">
+            <h3>Installation & Certified Workmanship</h3>
+            <div class="install-options-grid">
+              <div class="install-card active selected-locked" data-install="pro_install_seneca" style="border-color: #00E5FF; background: rgba(0, 229, 255, 0.08); cursor: default;">
+                <div class="install-radio" style="border-color: #00E5FF; background: #00E5FF; color: #000; font-weight: 800; display: flex; align-items: center; justify-content: center;">✓</div>
+                <div class="install-details">
+                  <span class="install-title" style="color: #00E5FF; font-weight: 700;">Professional Shop Installation — Seneca, SC (Mandatory)</span>
+                  <span class="install-desc" id="installDescText">Certified TGU master installation: freight uncrating, high-density double-bulb rail sealing, precision bed alignment, heavy-duty torque clamping, 12V CHMSL 3rd brake light wiring, and 1-Year Master Labor Warranty.</span>
+                  <span class="install-price" id="installPriceBadge" style="color: #00E5FF; font-weight: 800;">+$200.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Lead Form -->
+          <div class="lead-form-section">
+            <h3>Contact & Upfit Information</h3>
+            <p>Receive your complete build PDF and have an upfit specialist confirm lead times and paint availability.</p>
+
+            <!-- Modular OAuth Fast Sign-In / Profile Box (Configurable per Retailer Deployment) -->
+            <div id="oauthContainer" class="oauth-fast-login-box">
+              <div id="oauthLoginPrompt" class="oauth-prompt-state">
+                <div class="oauth-info-text">
+                  <span class="oauth-sparkle">⚡</span>
+                  <div>
+                    <strong>Speed up your quote with Google Auto-Fill</strong>
+                    <p>Instantly verifies your contact info and automatically saves your custom build to your customer account.</p>
+                  </div>
+                </div>
+                <button type="button" id="btnGoogleSignIn" class="tgu-google-auth-btn" onclick="triggerClientOAuthLogin()">
+                  <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                  </svg>
+                  <span>Auto-Fill with Google</span>
+                </button>
+              </div>
+
+              <div id="oauthLoggedInState" class="oauth-authenticated-state hidden">
+                <div class="oauth-user-badge">
+                  <div class="oauth-user-avatar" id="oauthUserAvatar">G</div>
+                  <div class="oauth-user-details">
+                    <span class="oauth-user-name" id="oauthUserName">Customer Name</span>
+                    <span class="oauth-user-email" id="oauthUserEmail">customer@example.com</span>
+                  </div>
+                  <span class="oauth-verified-tag">✓ Verified Profile</span>
+                </div>
+                <button type="button" class="oauth-signout-btn" onclick="triggerClientOAuthLogout()">Switch Account</button>
+              </div>
+            </div>
+
+            <div class="oauth-divider" id="oauthDivider">
+              <span>or enter details manually</span>
+            </div>
+
+            <form id="quoteForm" onsubmit="handleQuoteSubmit(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="custName">Full Name <span class="req-badge" id="req-custName">* REQUIRED</span></label>
+                  <input type="text" id="custName" class="tgu-input" required placeholder="e.g. John Moorhead" />
+                </div>
+                <div class="form-group">
+                  <label for="custEmail">Email Address <span class="req-badge" id="req-custEmail">* REQUIRED</span></label>
+                  <input type="email" id="custEmail" class="tgu-input" required placeholder="e.g. john@example.com" />
+                </div>
+                <div class="form-group">
+                  <label for="custPhone">Phone Number <span class="req-badge" id="req-custPhone">* REQUIRED</span></label>
+                  <input type="tel" id="custPhone" class="tgu-input" required placeholder="e.g. (864) 798-7825" />
+                </div>
+                <div class="form-group">
+                  <label for="custZip">Zip Code <span class="req-badge" id="req-custZip">* REQUIRED</span></label>
+                  <input type="text" id="custZip" class="tgu-input" required placeholder="e.g. 29678" />
+                </div>
+                <div class="form-group">
+                  <label for="custUse">Primary Vehicle Use <span class="req-badge" id="req-custUse">* REQUIRED</span></label>
+                  <select id="custUse" class="tgu-select" required>
+                    <option value="">-- Select Primary Use (Required) --</option>
+                    <option value="Daily Driver">Daily Driver</option>
+                    <option value="Camping & Outdoors">Camping & Overland</option>
+                    <option value="Work/Contracting">Commercial / Contracting</option>
+                    <option value="Fleet">Municipal / Fleet</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="custContactPref">Preferred Contact Method <span class="req-badge" id="req-custContactPref">* REQUIRED</span></label>
+                  <select id="custContactPref" class="tgu-select" required>
+                    <option value="">-- Select Contact Method (Required) --</option>
+                    <option value="Phone">Phone Call</option>
+                    <option value="Text">Text / SMS</option>
+                    <option value="Email">Email</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="custNotes">Special Requests or Notes <i>(Optional)</i></label>
+                <textarea id="custNotes" class="tgu-textarea" rows="2" placeholder="e.g., I have a spray-in bedliner, also looking for running boards..."></textarea>
+              </div>
+
+              <div class="pane-footer flex-between">
+                <button type="button" class="tgu-secondary-btn prev-step-btn" data-target="4">← Back to Options</button>
+                <button type="submit" class="tgu-primary-btn tgu-submit-btn" id="submitQuoteBtn">🚀 Submit Custom Build Quote</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right: Dynamic 2D Visualizer & Sticky Totalizer Sidebar -->
+      <aside class="sidebar-area">
+        
+        <!-- Visualizer Card -->
+        <div class="visualizer-card">
+          <div class="visualizer-header">
+            <button type="button" id="resetConfiguratorBtn" class="tgu-reset-btn" title="Reset all selections and start over">
+              <span class="reset-icon">↺</span> Start Over
+            </button>
+            <span id="visModelLabel" class="vis-model-label">Select Cap Model</span>
+          </div>
+
+          <div class="canvas-wrapper">
+            <svg id="truckCanvas" viewBox="0 0 600 240" class="truck-svg">
+              <!-- Truck Background Silhouette -->
+              <g id="svgTruckBase">
+                <!-- Cab & Wheels -->
+                <path d="M 40 180 L 40 140 Q 50 80 130 80 L 220 80 L 240 130 L 560 130 L 560 180 Z" fill="#2A2E33" />
+                <!-- Truck Cab Window -->
+                <path d="M 60 135 Q 70 95 130 95 L 210 95 L 210 135 Z" fill="#15181B" />
+                <!-- Wheels & Rims -->
+                <circle cx="120" cy="185" r="30" fill="#111" />
+                <circle cx="120" cy="185" r="18" fill="#444" />
+                <circle cx="470" cy="185" r="30" fill="#111" />
+                <circle cx="470" cy="185" r="18" fill="#444" />
+              </g>
+
+              <!-- Dynamic Cap Layer (Color Match Fill) -->
+              <g id="svgCapLayer">
+                <path id="svgCapBody" d="M 230 130 L 240 85 Q 260 80 540 80 Q 560 85 560 130 Z" fill="#FFFFFF" stroke="#333" stroke-width="2" />
+                <!-- Dynamic Window Outline -->
+                <path id="svgCapWindow" d="M 260 120 L 265 95 L 530 95 L 535 120 Z" fill="#111822" opacity="0.9" />
+                <!-- Dynamic Rack Crossbars -->
+                <g id="svgCapRacks" opacity="0">
+                  <line x1="280" y1="80" x2="280" y2="70" stroke="#111" stroke-width="4" />
+                  <line x1="490" y1="80" x2="490" y2="70" stroke="#111" stroke-width="4" />
+                  <line x1="260" y1="70" x2="510" y2="70" stroke="#111" stroke-width="6" stroke-linecap="round" />
+                </g>
+              </g>
+            </svg>
+          </div>
+
+          <div class="vis-specs-bar">
+            <div class="spec-item">
+              <span class="spec-label">Fitment:</span>
+              <span class="spec-val" id="visFitmentBadge">2024 Ford F-150 (5'6" Bed)</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Finish:</span>
+              <span class="spec-val" id="visColorBadge">Oxford White (YZ)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sticky Totalizer Summary Box -->
+        <div class="totalizer-card">
+          <div class="totalizer-header">
+            <h3>Estimated Investment</h3>
+            <span class="retail-badge">MSRP / RETAIL</span>
+          </div>
+
+          <div class="totalizer-body">
+            <div class="price-row base-row">
+              <span id="totModelName">Ranch Echo (Base)</span>
+              <span class="price-val" id="totBasePrice">$2,625.00</span>
+            </div>
+
+            <div class="options-list" id="totOptionsList">
+              <!-- Itemized add-ons inserted here -->
+            </div>
+
+            <div class="price-row labor-row">
+              <span id="totLaborName">Pro Shop Installation (Seneca, SC)</span>
+              <span class="price-val" id="totLaborPrice">$200.00</span>
+            </div>
+
+            <div class="price-row tax-row" style="color: #00E5FF; font-size: 13px;">
+              <span>Estimated SC Sales Tax (6%)</span>
+              <span class="price-val" id="totTaxPrice" style="color: #00E5FF; font-weight: 700;">$169.20</span>
+            </div>
+
+            <hr class="totalizer-divider" />
+
+            <div class="grand-total-row">
+              <div class="grand-label">
+                <span>Total Estimated Investment</span>
+                <small>Includes Seneca, SC 6% Tax & Installation</small>
+              </div>
+              <span class="grand-price" id="totGrandTotal">$2,989.20</span>
+            </div>
+
+            <div class="financing-badge">
+              <span>💳 Financing as low as <b>$78/mo</b> with Affirm</span>
+            </div>
+
+            <button class="tgu-sidebar-cta next-step-btn" id="sidebarCtaBtn" data-target="5">
+              Lock Build & Request Quote →
+            </button>
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Persistent Dark Footer -->
+  <footer class="tgu-footer">
+    <div class="tgu-footer-inner">
+      <div class="tgu-footer-brand">
+        <span class="tgu-logo-badge">TRUCK GUY</span>
+        <span class="tgu-footer-text">Truck Guy Upfitters • Seneca, SC • Authorized LTA / Ranch / Venturous Dealer</span>
+      </div>
+      <div class="tgu-footer-contact">
+        <span>Questions? Call an Upfitter: </span>
+        <a href="tel:18647987825" class="tgu-footer-phone" title="Call Truck Guy Upfitters">
+          <svg class="phone-gold-svg" viewBox="0 0 24 24" width="18" height="18">
+            <defs>
+              <linearGradient id="goldPhoneGradFooter" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFFBE0"/>
+                <stop offset="35%" stop-color="#FFD700"/>
+                <stop offset="100%" stop-color="#FF8C00"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#goldPhoneGradFooter)" d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+          </svg>
+          <span class="phone-text">864.79.TRUCK</span>
+        </a>
+      </div>
+    </div>
+    <div class="tgu-footer-bottom">
+      <div class="tgu-webmaster-row">
+        <span>problems with this site? contact: </span>
+        <a href="mailto:webmaster@truckguy.pro" class="tgu-webmaster-link">webmaster@truckguy.pro</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- "What You Get" Visual Explainer Modal -->
+  <div class="tgu-modal hidden" id="explainerModal">
+    <div class="modal-overlay" onclick="closeModal()"></div>
+    <div class="modal-card">
+      <button class="modal-close-btn" onclick="closeModal()">✕</button>
+      <div class="modal-header">
+        <h3 id="modalTitle">Option Details</h3>
+        <span class="modal-badge" id="modalBadge">WHAT YOU GET</span>
+      </div>
+      <div class="modal-body">
+        <div class="modal-img-wrapper" id="modalImgContainer">
+          <img id="modalImg" src="https://images.unsplash.com/photo-1559563458-527698bf5295?w=800&q=80" alt="Option Preview" />
+        </div>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-benefits-box">
+          <h4>Key Benefits & Features:</h4>
+          <ul id="modalBenefitsList"></ul>
+        </div>
+        <div class="modal-ideal-box">
+          <b>Ideal For:</b> <span id="modalIdealFor"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="tgu-primary-btn" onclick="closeModal()">Got It, Back to Configurator</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Model Upgrade Prompt Modal -->
+  <div class="tgu-modal hidden" id="upgradeModal">
+    <div class="modal-overlay" onclick="closeUpgradeModal()"></div>
+    <div class="modal-card upgrade-modal-card">
+      <button class="modal-close-btn" onclick="closeUpgradeModal()">✕</button>
+      <div class="modal-header">
+        <div>
+          <h3 id="upgradeModalTitle">⚡ Model Upgrade Available</h3>
+          <span class="modal-badge upgrade-badge" id="upgradeModalBadge">UPGRADE TO UNLOCK</span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="upgrade-explanation" id="upgradeModalMsg">
+          This premium feature is exclusive to higher-tier models. Would you like to upgrade your cap to include this feature?
+        </p>
+        <div class="upgrade-models-grid" id="upgradeOptionsContainer">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer flex-between">
+        <button class="tgu-secondary-btn" onclick="closeUpgradeModal()">Keep Current Model</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quote Success Modal -->
+  <div class="tgu-modal hidden" id="successModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-card success-card">
+      <div class="success-icon">🎉</div>
+      <h2 id="succTitle">Quote Successfully Submitted!</h2>
+      <p id="succMessage"></p>
+      
+      <div class="quote-meta-card">
+        <div class="meta-row">
+          <span>Quote Reference:</span>
+          <b id="succQuoteRef" class="highlight-text"></b>
+        </div>
+        <div class="meta-row">
+          <span>Lead ID:</span>
+          <span id="succLeadId"></span>
+        </div>
+        <div class="meta-row">
+          <span>Total Investment:</span>
+          <b id="succTotalPrice"></b>
+        </div>
+      </div>
+
+      <p class="next-steps-text">
+        Our upfitting specialists in Seneca, SC have received your exact specifications. We are checking current production queue times and paint formulas. You will receive an email confirmation shortly!
+      </p>
+
+      <div class="modal-footer flex-center">
+        <button class="tgu-primary-btn" onclick="location.reload()">Start New Build</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="configurator.js"></script>
+</body>
+</html>

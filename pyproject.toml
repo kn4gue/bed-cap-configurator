@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bed-cap-configurator"
+version = "1.0.0"
+description = "Truck Bed Cap Configurator, Rules Engine & NHTSA VIN Validator"
+readme = "README.md"
+authors = [
+    { name = "Travis", email = "twis7@users.noreply.github.com" }
+]
+license = { text = "MIT" }
+keywords = ["truck-caps", "configurator", "upfitting", "vin-decoder", "fastapi", "pricing-engine"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "pydantic>=2.0.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.20.0",
+    "httpx>=0.25.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.25.0",
+]
+
+[project.scripts]
+bed-cap-configurator = "bed_cap_configurator.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/kn4gue/bed-cap-configurator"
+Repository = "https://github.com/kn4gue/bed-cap-configurator"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bed_cap_configurator*"]
+
+[tool.setuptools.package-data]
+"bed_cap_configurator" = ["data/*.json", "static/*", "static/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
